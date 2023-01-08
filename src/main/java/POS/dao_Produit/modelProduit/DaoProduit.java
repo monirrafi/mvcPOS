@@ -24,8 +24,8 @@ public class DaoProduit implements IProduit {
     private static final String GET_ALL = "SELECT * FROM Produit ORDER BY ID_Produit";
     private static final String GET_BY_ID = "SELECT * FROM Produit WHERE ID_Produit=?";
     private static final String GET_BY_CHAMPS = "SELECT * FROM Produit WHERE ";
-    private static final String ENREGISTRER = "INSERT INTO Produit VALUES(0,?,?,?)";
-    private static final String MODIFIER = "UPDATE Produit SET NOM_Produit=?,PRIX_VENTE=?,CODE_PRODUIT=? WHERE ID_Produit=?";
+    private static final String ENREGISTRER = "INSERT INTO Produit VALUES(0,?,?,?,?,?)";
+    private static final String MODIFIER = "UPDATE Produit SET NOM_Produit=?,PRIX_VENTE=?,CODE_PRODUIT=?,TPS=?,TVQ=? WHERE ID_Produit=?";
 
     // Singleton de connexion à la BD
     // getConnexion() est devenu une zonne critique. 
@@ -81,6 +81,8 @@ public class DaoProduit implements IProduit {
             stmt.setString(1, Produit.getNom());
             stmt.setDouble(2, Produit.getPrixVente());
             stmt.setString(3, Produit.getCodeProduit());
+            stmt.setBoolean(4, Produit.getTPS());
+            stmt.setBoolean(5, Produit.getTVQ());
            
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
@@ -112,7 +114,9 @@ public class DaoProduit implements IProduit {
                     Produit.setNom(rs.getString(2));
                     Produit.setPrixVente(rs.getDouble(3));
                     Produit.setCodeProduit(rs.getString(4));
-
+                    Produit.setTPS(rs.getBoolean(5));
+                    Produit.setTVQ(rs.getBoolean(6));
+    
                     listeProduits.add(Produit);
                 }
             } catch (SQLException e) {
@@ -179,6 +183,8 @@ public class DaoProduit implements IProduit {
                 Produit.setNom(rs.getString(2));
                 Produit.setPrixVente(rs.getDouble(3));
                 Produit.setCodeProduit(rs.getString(4));
+                Produit.setTPS(rs.getBoolean(5));
+                Produit.setTVQ(rs.getBoolean(6));
                 listeProduits.add(Produit);
             }
         } catch (SQLException e) {
@@ -201,7 +207,9 @@ public class DaoProduit implements IProduit {
             stmt.setString(1, Produit.getNom());
             stmt.setDouble(2, Produit.getPrixVente());
             stmt.setString(3, Produit.getCodeProduit());
-            stmt.setInt(4, Produit.getIdProduit());
+            stmt.setBoolean(4, Produit.getTPS());
+            stmt.setBoolean(5, Produit.getTVQ());
+            stmt.setInt(6, Produit.getIdProduit());
 
             return stmt.executeUpdate();
         } catch (SQLException e) {
@@ -269,6 +277,8 @@ public class DaoProduit implements IProduit {
                 Produit.setNom(rs.getString(2));
                 Produit.setPrixVente(rs.getDouble(3));
                 Produit.setCodeProduit(rs.getString(4));
+                Produit.setTPS(rs.getBoolean(5));
+                Produit.setTVQ(rs.getBoolean(6));
 
                 listeProduits.add(Produit);
             }

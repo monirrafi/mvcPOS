@@ -31,6 +31,8 @@ public class VueProduit extends JFrame implements actionEvent{
 	private JPanel contentPane;
 	private JTextField txtNom;
 	private JTextField txtPrixVente;
+	private JTextField txtTPS;
+	private JTextField txtTVQ;
 	private JTextField txtCode;
 	private JTable table;
 	JButton btnAjouter = new JButton();
@@ -74,24 +76,45 @@ public class VueProduit extends JFrame implements actionEvent{
 		
 		JLabel lblPrixVente = new JLabel("Prix Vente");
 		lblPrixVente.setFont(new Font("Times New Roman", Font.BOLD, 12));
-		lblPrixVente.setBounds(20, 70, 117, 19);
+		lblPrixVente.setBounds(20, 35, 117, 19);
 		paneChamps.add(lblPrixVente);
 		
 		txtPrixVente = new JTextField();
 		lblPrixVente.setLabelFor(txtPrixVente);
-		txtPrixVente.setBounds(142, 70, 198, 19);
+		txtPrixVente.setBounds(142, 35, 198, 19);
 		paneChamps.add(txtPrixVente);
 		
-		txtCode = new JTextField();
-		txtCode.setColumns(10);
-		txtCode.setBounds(142, 35, 198, 19);
-		paneChamps.add(txtCode);
+		JLabel lblTPS= new JLabel("TPS");
+		lblTPS.setFont(new Font("Times New Roman", Font.BOLD, 12));
+		lblTPS.setBounds(20, 65, 117, 19);
+		paneChamps.add(lblTPS);
 		
+		txtTPS = new JTextField();
+		lblPrixVente.setLabelFor(txtTPS);
+		txtTPS.setBounds(142, 65, 198, 19);
+		paneChamps.add(txtTPS);
+
+		JLabel lblTVQ = new JLabel("TVQ");
+		lblTVQ.setFont(new Font("Times New Roman", Font.BOLD, 12));
+		lblTVQ.setBounds(20, 95, 117, 19);
+		paneChamps.add(lblTVQ);
+		
+		txtTVQ = new JTextField();
+		lblPrixVente.setLabelFor(txtTVQ);
+		txtTVQ.setBounds(142, 95, 198, 19);
+		paneChamps.add(txtTVQ);
+
 		JLabel lblCode = new JLabel("Code produit");
 		lblCode.setLabelFor(txtCode);
 		lblCode.setFont(new Font("Times New Roman", Font.BOLD, 12));
-		lblCode.setBounds(20, 35, 117, 19);
+		lblCode.setBounds(20, 130, 117, 19);
 		paneChamps.add(lblCode);
+
+		txtCode = new JTextField();
+		txtCode.setColumns(10);
+		txtCode.setBounds(142, 130, 198, 19);
+		paneChamps.add(txtCode);
+		
 		
 		JPanel paneTable = new JPanel();
 		paneTable.setBounds(370, 70, 545, 207);
@@ -109,7 +132,7 @@ public class VueProduit extends JFrame implements actionEvent{
 				{null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Nom Produit", "Prix Vente", "Code Produit"
+				"Nom Produit", "Prix Vente", "Code Produit","TPS", "TVQ"
 			}
 		));
 		
@@ -205,7 +228,8 @@ public void viderChamps() {
 	txtNom.setText("");
 	txtCode.setText("");
 	txtPrixVente.setText("");
-	
+	txtTPS.setText("");
+	txtTVQ.setText("");
 }
 public DefaultTableModel remplirTable(String champs,String valeur) {
 	ArrayList<Produit> listeProduits = new ArrayList<>();
@@ -218,12 +242,12 @@ public DefaultTableModel remplirTable(String champs,String valeur) {
 		listeProduits = (ArrayList<Produit>) ctrProduit.CtrProduit_GetByChamps(champs, valeur);
 
 	}
-	String[] column = {"Nom Produit", "Prix Vente", "Code Produit"};
+	String[] column = {"Nom Produit", "Prix Vente", "Code Produit","TPS", "TVQ"};
 	DefaultTableModel model = new DefaultTableModel(column,0);
 	
 	
-	for(Produit Produit:listeProduits){
-			model.addRow(new Object[]{Produit.getNom(),Produit.getPrixVente(),Produit.getCodeProduit()});				
+	for(Produit produit:listeProduits){
+			model.addRow(new Object[]{produit.getNom(),produit.getPrixVente(),produit.getCodeProduit(),produit.getTPS(),produit.getTVQ()});				
 		}
 	return model;
 
@@ -260,11 +284,15 @@ public  String[] getListeCBox(){
 		txtNom.setText(Produit.getNom());
 		txtCode.setText(Produit.getCodeProduit());
 		txtPrixVente.setText(String.valueOf(Produit.getPrixVente()));
+		txtTPS.setText(String.valueOf(Produit.getTPS()));
+		txtTVQ.setText(String.valueOf(Produit.getTVQ()));
 	}
 
 	public boolean verifierRemplissageChamps() {
 		if(!txtCode.getText().equals("") & txtCode.getText() != null &
 		!txtNom.getText().equals("") & txtNom.getText() != null &
+		!txtTPS.getText().equals("") & txtTPS.getText() != null &
+		!txtTVQ.getText().equals("") & txtTVQ.getText() != null &
 		!txtPrixVente.getText().equals("") & txtPrixVente.getText() != null ){
 			return true;
 
@@ -302,7 +330,7 @@ public void ajouter() {
 				JOptionPane.showMessageDialog(null, "l'Produit  existe déjà!!","AJOUT", JOptionPane.YES_NO_OPTION);
 		}else{
 
-		Produit Produit = new Produit(txtNom.getText(),Double.parseDouble(txtPrixVente.getText()),txtCode.getText());
+		Produit Produit = new Produit(txtNom.getText(),Double.parseDouble(txtPrixVente.getText()),txtCode.getText(),Boolean.parseBoolean(txtTPS.getText()),Boolean.parseBoolean(txtTVQ.getText()));
 		ctrProduit.CtrProduit_Enregistrer(Produit);
 
 				DefaultComboBoxModel<String> modelNum = new DefaultComboBoxModel<>(getListeCBox());
@@ -327,7 +355,7 @@ public void modifierProduit() {
 
 		if(rep==JOptionPane.YES_OPTION){
 		
-			Produit ProduitNew = new Produit(Produit.getIdProduit(),txtNom.getText(),Double.parseDouble(txtPrixVente.getText()),txtCode.getText());
+			Produit ProduitNew = new Produit(Produit.getIdProduit(),txtNom.getText(),Double.parseDouble(txtPrixVente.getText()),txtCode.getText(),Boolean.parseBoolean(txtTPS.getText()),Boolean.parseBoolean(txtTVQ.getText()));
 	
 			ctrProduit.CtrProduit_Modifier(ProduitNew);
 	
