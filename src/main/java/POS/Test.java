@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
-import javax.*;
+import javax.media.*;
 
 public class Test extends JFrame {
   public static void main(String args[]) {
